@@ -19,13 +19,14 @@
   "homepage": "https://github.com/goodeggs/mongoose-extensions",
   "bugs": "https://github.com/goodeggs/mongoose-extensions/issues",
   "dependencies": {
-    "mongoose-querystream-worker": "~0.0.2",
+    "inflect": "^0.3.0",
     "mongoose": "~3.6.17",
-    "underscore": "1.4.4",
-    "fibrous": "^0.3.3",
-    "inflect": "^0.3.0"
+    "mongoose-querystream-worker": "~0.0.2",
+    "q": "^1.1.2",
+    "underscore": "1.4.4"
   },
   "devDependencies": {
+    "fibrous": "^0.3.3",
     "coffee-script": ">=1.8.x",
     "mocha": "~1.x.x",
     "mocha-fibrous": "0.0.1",

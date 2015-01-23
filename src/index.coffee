@@ -1,8 +1,9 @@
-fibrous = require 'fibrous'
+async = require 'async'
 mongoose = require 'mongoose'
 _ = require 'underscore'
 {paths, path} = require './paths'
 require 'mongoose-querystream-worker'
+Q = require 'q'
 
 # Adds additional mongoose schema types
 require './mongoose_types'
@@ -42,17 +43,22 @@ mongoose.Document::init = (args...) ->
     cb(null) if cb?
   return result
 
-mongoose.Query::paginate = fibrous (page = 1, pageSize = 10) ->
+mongoose.Query::paginate = (page = 1, pageSize = 10, cb) ->
+  complete = ([recordCount, records]) ->
+    records.page = page
+    records.pageSize = pageSize
+    records.pageCount = Math.ceil(recordCount / pageSize)
+    records.recordCount = recordCount
+    cb(null, records)
+
+  error = (err) ->
+    cb(err)
+
   skip = (page - 1) * pageSize
-  [recordCount, records] = fibrous.wait [
-    _.clone(@).future.exec('count')
-    @skip(skip).limit(pageSize).future.exec()
-  ]
-  records.page = page
-  records.pageSize = pageSize
-  records.pageCount = Math.ceil(recordCount / pageSize)
-  records.recordCount = recordCount
-  return records
+  [recordCount, records] = Q.all([
+    _.clone(@).exec('count')
+    @skip(skip).limit(pageSize).exec()
+  ]).then complete, error
 
 mongoose.Types.DocumentArray::sequence = (ids) ->
   ids = (id.toString() for id in ids)
