@@ -1,0 +1,41 @@
+{
+  "name": "mongoose-extensions",
+  "version": "1.0.0",
+  "description": "A set of mongoose extensions that will make your mongo db experience better!",
+  "author": "Good Eggs <open-source@goodeggs.com>",
+  "contributors": [
+    "Kerry Liu <kerry@goodeggs.com>",
+    "Max Edmands <max@goodeggs.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "mongoose"
+  ],
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/goodeggs/mongoose-extensions.git"
+  },
+  "homepage": "https://github.com/goodeggs/mongoose-extensions",
+  "bugs": "https://github.com/goodeggs/mongoose-extensions/issues",
+  "dependencies": {
+    "mongoose-querystream-worker": "~0.0.2",
+    "mongoose": "~3.6.17",
+    "underscore": "1.4.4",
+    "fibrous": "^0.3.3",
+    "inflect": "^0.3.0"
+  },
+  "devDependencies": {
+    "coffee-script": ">=1.8.x",
+    "mocha": "~1.x.x",
+    "mocha-fibrous": "0.0.1",
+    "chai": "^1.10.0",
+    "sinon": "^1.12.2"
+  },
+  "scripts": {
+    "compile": "coffee --bare --compile --output lib/ src/",
+    "prepublish": "npm run compile",
+    "pretest": "npm run compile",
+    "test": "mocha"
+  }
+}
