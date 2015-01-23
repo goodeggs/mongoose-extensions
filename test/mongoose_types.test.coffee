@@ -1,9 +1,9 @@
 require './setup'
 
-mongooseExtensions = require '../src/'
 mongoose = require 'mongoose'
-{Schema} = mongoose
 _ = require 'underscore'
+mongooseTypes = require('../src/mongoose_types')(mongoose, _)
+{Schema} = mongoose
 fibrous = require 'fibrous'
 {expect} = require 'chai'
 

@@ -1,8 +1,9 @@
 require './setup'
 
-mongooseExtensions = require '../src/'
 mongoose = require 'mongoose'
 _ = require 'underscore'
+mongooseExtensions = require('../src/index')(mongoose, _)
+
 {expect} = require 'chai'
 sinon = require 'sinon'
 
