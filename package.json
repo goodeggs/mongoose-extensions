@@ -1,6 +1,6 @@
 {
   "name": "mongoose-extensions",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "A set of mongoose extensions that will make your mongo db experience better!",
   "author": "Good Eggs <open-source@goodeggs.com>",
   "contributors": [
