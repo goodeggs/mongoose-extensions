@@ -3,6 +3,7 @@ require './setup'
 mongoose = require 'mongoose'
 _ = require 'underscore'
 mongooseExtensions = require('../src/index')(mongoose, _)
+{ValidationError} = require('mongoose').Error
 
 {expect} = require 'chai'
 sinon = require 'sinon'
@@ -176,3 +177,79 @@ describe 'collection name default', ->
     schema = new mongoose.Schema()
     model = mongoose.model 'SmallPerson', schema, 'smallpeople'
     expect(model.collection.name).to.equal 'smallpeople'
+
+describe '#validateAndSave', ->
+  model = null
+
+  before ->
+    schema = new mongoose.Schema
+      field: {type: String, required: true}
+    , strict: true
+    Model = mongoose.model('VaSTestModel', schema)
+
+  describe 'with a valid model', ->
+    beforeEach ->
+      Model.sync.remove()
+      model = new Model field: 'foo'
+
+    it 'returns true', ->
+      expect(model.sync.validateAndSave()).to.be.true
+
+    it 'saves the model', ->
+      model.sync.validateAndSave()
+      expect(Model.sync.count()).to.eql 1
+
+  describe 'with an invalid model', ->
+
+    beforeEach ->
+      Model.sync.remove()
+      model = new Model()
+
+    it 'returns false', ->
+      expect(model.sync.validateAndSave()).to.be.false
+
+    it 'does not save the model', ->
+      model.sync.validateAndSave()
+      expect(Model.sync.count()).to.eql 0
+
+  describe 'when a model raises a ValidationError directly', ->
+
+    before ->
+      schema = new mongoose.Schema
+        field: String
+      , strict: true
+      schema.pre 'save', (next) ->
+        next new ValidationError "Beep boop"
+      Model = mongoose.model('ThrowTestModel', schema)
+
+    beforeEach ->
+      Model.sync.remove()
+      model = new Model()
+
+    it 'returns false', ->
+      expect(model.sync.validateAndSave()).to.be.false
+
+    it 'does not save the model', ->
+      model.sync.validateAndSave()
+      expect(Model.sync.count()).to.eql 0
+
+    it 'ensures an errors object exists on the parent', ->
+      model.sync.validateAndSave()
+      expect(model.errors).to.be.ok
+
+  describe 'when a model raises a non-Validation Error', ->
+
+    before ->
+      schema = new mongoose.Schema
+        field: String
+      , strict: true
+      schema.pre 'save', (next) ->
+        next new Error "Beep boop"
+      Model = mongoose.model('ThrowTestModel2', schema)
+
+    beforeEach ->
+      Model.sync.remove()
+      model = new Model()
+
+    it 'throws through', ->
+      expect(-> model.sync.validateAndSave()).to.throw Error

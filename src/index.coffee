@@ -13,6 +13,7 @@ module.exports = (mongoose, _) ->
     @save (err, result) =>
       if err?.name is 'ValidationError'
         @_id = null if @isNew
+        @errors ?= error: err
         cb(null, false)
       else if err?
         cb(err, false)
