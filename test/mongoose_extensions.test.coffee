@@ -219,7 +219,9 @@ describe '#validateAndSave', ->
         field: String
       , strict: true
       schema.pre 'save', (next) ->
-        next new ValidationError "Beep boop"
+        error = new ValidationError({})
+        error.errors.foo = type: "Beep boop"
+        next error
       Model = mongoose.model('ThrowTestModel', schema)
 
     beforeEach ->
@@ -236,6 +238,7 @@ describe '#validateAndSave', ->
     it 'ensures an errors object exists on the parent', ->
       model.sync.validateAndSave()
       expect(model.errors).to.be.ok
+      expect(model.errors.foo.type).to.equal 'Beep boop'
 
   describe 'when a model raises a non-Validation Error', ->
 
