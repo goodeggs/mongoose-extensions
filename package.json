@@ -31,7 +31,8 @@
     "chai": "^1.10.0",
     "sinon": "^1.12.2",
     "mongoose": "~3.6.17",
-    "underscore": "1.4.4"
+    "underscore": "1.4.4",
+    "goodeggs-money": "^1.0.1"
   },
   "scripts": {
     "compile": "coffee --bare --compile --output lib/ src/",

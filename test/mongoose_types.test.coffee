@@ -1,16 +1,18 @@
 require './setup'
-
-mongoose = require 'mongoose'
-_ = require 'underscore'
-mongooseTypes = require('../src/mongoose_types')(mongoose, _)
-{Schema} = mongoose
-fibrous = require 'fibrous'
+_        = require 'underscore'
+fibrous  = require 'fibrous'
 {expect} = require 'chai'
 
+{Schema} = mongoose = require 'mongoose'
+Cents = require 'goodeggs-money'
+
+mongooseTypes = require('../src/mongoose_types')(mongoose, _)
 
 schema = new Schema
   balance: type: Schema.Types.Money
+  cents: type: Schema.Types.Cents
   day: type: Schema.Types.Day
+
 TestObject = mongoose.model('TestObject', schema)
 
 describe 'mongoose_types', ->
@@ -63,6 +65,48 @@ describe 'mongoose_types', ->
         testObj = new TestObject(balance: 7.105427357601002e-15)
         expect(testObj.balance).to.eql 0
 
+  describe 'Cents', ->
+    describe 'cast', ->
+      it 'should return a true number', fibrous ->
+        testObj = new TestObject(cents: 5)
+        expect(typeof testObj.cents).to.eql 'number'
+        expect(testObj.cents).to.eql 5
+        testObj.sync.save()
+
+        testObj = TestObject.sync.findById testObj
+        expect(typeof testObj.cents).to.eql 'number'
+        expect(testObj.cents).to.eql 5
+
+      it 'should throw if cents is not an int', fibrous ->
+        try
+          new TestObject(cents: 1.001).sync.save()
+        catch e
+          error = e
+
+        expect(error).to.have.property('message', 'Cast to cents failed for value "1.001" at path "cents"')
+
+      it 'should throw if cents is a negative int', fibrous ->
+        try
+          new TestObject(cents: -1).sync.save()
+        catch e
+          error = e
+
+        expect(error).to.have.property('message', 'Cast to cents failed for value "-1" at path "cents"')
+
+      it 'properly casts string', fibrous ->
+        testObj = new TestObject(cents: '5')
+        expect(testObj.cents).to.eql 5
+
+      it 'properly casts Cents', fibrous ->
+        testObj = new TestObject(cents: new Cents(10))
+        expect(testObj.cents).to.eql 10
+
+      it 'properly casts string for queries', fibrous ->
+        testObj = new TestObject(cents: 501)
+        testObj.sync.save()
+
+        result = TestObject.sync.findOne cents: '501'
+        expect(result.id).to.eql testObj.id
 
   describe 'Day', ->
     describe 'cast', ->
