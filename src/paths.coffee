@@ -1,5 +1,3 @@
-_ = require 'underscore'
-
 module.exports = (_) ->
   _setPath = (obj, path, value) ->
     keys = path.split('.')
