@@ -1,12 +1,13 @@
+_ = require 'underscore'
 
-module.exports = (mongoose, _) ->
+module.exports = (mongoose) ->
 
-  {paths, path} = require('./paths')(_)
+  {paths, path} = require('./paths')()
   require 'mongoose-querystream-worker'
   Q = require 'q'
 
   # Adds additional mongoose schema types
-  require('./mongoose_types')(mongoose, _)
+  require('./mongoose_types')(mongoose)
   inflections = require './inflections'
 
   mongoose.Model::validateAndSave = (cb) ->

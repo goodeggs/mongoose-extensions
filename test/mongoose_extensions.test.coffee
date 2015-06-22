@@ -2,7 +2,7 @@ require './setup'
 
 mongoose = require 'mongoose'
 _ = require 'underscore'
-mongooseExtensions = require('../src/index')(mongoose, _)
+mongooseExtensions = require('../src/index')(mongoose)
 {ValidationError} = require('mongoose').Error
 
 {expect} = require 'chai'

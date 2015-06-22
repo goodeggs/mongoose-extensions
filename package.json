@@ -21,18 +21,17 @@
   "dependencies": {
     "inflect": "^0.3.0",
     "mongoose-querystream-worker": "~0.0.2",
-    "q": "^1.1.2"
+    "q": "^1.1.2",
+    "underscore": "^1.4.4"
   },
   "devDependencies": {
-    "fibrous": "^0.3.3",
-    "coffee-script": ">=1.8.x",
-    "mocha": "~1.x.x",
-    "mocha-fibrous": "0.0.1",
     "chai": "^1.10.0",
-    "sinon": "^1.12.2",
+    "coffee-script": ">=1.8.x",
+    "fibrous": "^0.3.3",
+    "goodeggs-money": "^1.0.1",
+    "mocha-fibrous": "0.0.1",
     "mongoose": "~3.6.17",
-    "underscore": "1.4.4",
-    "goodeggs-money": "^1.0.1"
+    "sinon": "^1.12.2"
   },
   "scripts": {
     "compile": "coffee --bare --compile --output lib/ src/",

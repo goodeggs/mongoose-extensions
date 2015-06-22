@@ -1,12 +1,11 @@
 require './setup'
-_        = require 'underscore'
 fibrous  = require 'fibrous'
 {expect} = require 'chai'
 
 {Schema} = mongoose = require 'mongoose'
 Cents = require 'goodeggs-money'
 
-mongooseTypes = require('../src/mongoose_types')(mongoose, _)
+mongooseTypes = require('../src/mongoose_types')(mongoose)
 
 schema = new Schema
   balance: type: Schema.Types.Money

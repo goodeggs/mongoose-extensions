@@ -1,4 +1,6 @@
-module.exports = (_) ->
+_ = require 'underscore'
+
+module.exports = ->
   _setPath = (obj, path, value) ->
     keys = path.split('.')
     lastKey = keys.pop()

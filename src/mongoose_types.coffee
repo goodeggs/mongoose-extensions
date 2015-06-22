@@ -1,4 +1,6 @@
-module.exports = (mongoose, _) ->
+_ = require 'underscore'
+
+module.exports = (mongoose) ->
 
   Types = mongoose.Schema.Types
   {CastError} = mongoose.SchemaType
