@@ -20,7 +20,7 @@
   "bugs": "https://github.com/goodeggs/mongoose-extensions/issues",
   "dependencies": {
     "inflect": "^0.3.0",
-    "mongoose-querystream-worker": "~0.0.2",
+    "mongoose-querystream-worker": "^1.0.0",
     "q": "^1.1.2",
     "underscore": "^1.4.4"
   },
