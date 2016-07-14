@@ -40,4 +40,16 @@ module.exports = (mongoose) ->
       throw new CastError('day', value, @path) if !/\d{4}\-\d{2}-\d{2}/.test value
       super(value, doc, init)
 
-  _(Types).extend({Money, Cents, Day})
+  class TimeOfDay extends Types.String
+    cast: (value, doc, init) ->
+      return value if value is null
+      return null if value is ''
+
+      throw new CastError('timeOfDay', value, @path) if !/\d{2}\:\d{2}/.test value
+      [hours, minutes] = value.split(':')
+      throw new CastError('timeOfDay', value, @path) unless 0 <= Number(hours) <= 23
+      throw new CastError('timeOfDay', value, @path) unless 0 <= Number(minutes) <= 59
+
+      super(value, doc, init)
+
+  _(Types).extend({Money, Cents, Day, TimeOfDay})
