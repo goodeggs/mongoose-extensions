@@ -11,6 +11,7 @@ schema = new Schema
   balance: type: Schema.Types.Money
   cents: type: Schema.Types.Cents
   day: type: Schema.Types.Day
+  timeOfDay: type: Schema.Types.TimeOfDay
 
 TestObject = mongoose.model('TestObject', schema)
 
@@ -130,3 +131,35 @@ describe 'mongoose_types', ->
       it 'throws for invalid values', fibrous ->
         testObj = new TestObject(day: '20130401')
         expect(-> testObj.sync.save()).to.throw('Cast to day failed for value "20130401" at path "day"')
+
+  describe 'TimeOfDay', ->
+    describe 'cast', ->
+      it 'should stores time of day as a string', fibrous ->
+        testObj = new TestObject(timeOfDay: '13:29')
+        expect(typeof testObj.timeOfDay).to.eql 'string'
+        expect(testObj.timeOfDay).to.eql '13:29'
+        testObj.sync.save()
+
+        testObj = TestObject.sync.findById testObj
+        expect(typeof testObj.timeOfDay).to.eql 'string'
+        expect(testObj.timeOfDay).to.eql '13:29'
+
+      it 'handles empty strings', fibrous ->
+        testObj = new TestObject(timeOfDay: '')
+        expect(testObj.timeOfDay).to.be.null
+        testObj.sync.save()
+
+        testObj = TestObject.sync.findById testObj
+        expect(testObj.timeOfDay).to.be.null
+
+      it 'throws for malformed values', fibrous ->
+        testObj = new TestObject(timeOfDay: '13')
+        expect(-> testObj.sync.save()).to.throw('Cast to timeOfDay failed for value "13" at path "timeOfDay"')
+
+      it 'throws for invalid hours', fibrous ->
+        testObj = new TestObject(timeOfDay: '24:00')
+        expect(-> testObj.sync.save()).to.throw('Cast to timeOfDay failed for value "24:00" at path "timeOfDay"')
+
+      it 'throws for invalid minutes', fibrous ->
+        testObj = new TestObject(timeOfDay: '13:60')
+        expect(-> testObj.sync.save()).to.throw('Cast to timeOfDay failed for value "13:60" at path "timeOfDay"')
