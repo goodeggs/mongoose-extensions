@@ -122,6 +122,10 @@ describe 'mongoose_types', ->
         testObj = new TestObject(day: '20130401')
         expect(-> testObj.sync.save()).to.throw Error.ValidationError
 
+      it 'throws when garbage is added to valid day', fibrous ->
+        testObj = new TestObject(timeOfDay: '2015-02-05x')
+        expect(-> testObj.sync.save()).to.throw Error.ValidationError
+
   describe 'TimeOfDay', ->
     describe 'cast', ->
       it 'should stores time of day as a string', fibrous ->
@@ -152,4 +156,8 @@ describe 'mongoose_types', ->
 
       it 'throws for invalid minutes', fibrous ->
         testObj = new TestObject(timeOfDay: '13:60')
+        expect(-> testObj.sync.save()).to.throw Error.ValidationError
+
+      it 'throws when garbage is added to valid time', fibrous ->
+        testObj = new TestObject(timeOfDay: '13:40x')
         expect(-> testObj.sync.save()).to.throw Error.ValidationError

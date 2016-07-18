@@ -41,7 +41,7 @@ module.exports = (mongoose) ->
       return value if value is null
       return null if value is ''
 
-      throw new CastError('day', value, @path) if !/\d{4}\-\d{2}-\d{2}/.test value
+      throw new CastError('day', value, @path) if !/^\d{4}\-\d{2}-\d{2}$/.test value
       super(value, doc, init)
 
     @schemaName: 'Day'
@@ -51,7 +51,7 @@ module.exports = (mongoose) ->
       return value if value is null
       return null if value is ''
 
-      throw new CastError('timeOfDay', value, @path) if !/\d{2}\:\d{2}/.test value
+      throw new CastError('timeOfDay', value, @path) if !/^\d{2}\:\d{2}$/.test value
       [hours, minutes] = value.split(':')
       throw new CastError('timeOfDay', value, @path) unless 0 <= Number(hours) <= 23
       throw new CastError('timeOfDay', value, @path) unless 0 <= Number(minutes) <= 59
