@@ -2,7 +2,7 @@ require './setup'
 fibrous  = require 'fibrous'
 {expect} = require 'chai'
 
-{Schema} = mongoose = require 'mongoose'
+{Schema, Error} = mongoose = require 'mongoose'
 Cents = require 'goodeggs-money'
 
 mongooseTypes = require('../src/mongoose_types')(mongoose)
@@ -78,20 +78,10 @@ describe 'mongoose_types', ->
         expect(testObj.cents).to.eql 5
 
       it 'should throw if cents is not an int', fibrous ->
-        try
-          new TestObject(cents: 1.001).sync.save()
-        catch e
-          error = e
-
-        expect(error).to.have.property('message', 'Cast to cents failed for value "1.001" at path "cents"')
+        expect(-> new TestObject(cents: 1.001).sync.save()).to.throw Error.ValidationError
 
       it 'should throw if cents is a negative int', fibrous ->
-        try
-          new TestObject(cents: -1).sync.save()
-        catch e
-          error = e
-
-        expect(error).to.have.property('message', 'Cast to cents failed for value "-1" at path "cents"')
+        expect(-> new TestObject(cents: -1).sync.save()).to.throw Error.ValidationError
 
       it 'properly casts string', fibrous ->
         testObj = new TestObject(cents: '5')
@@ -130,7 +120,7 @@ describe 'mongoose_types', ->
 
       it 'throws for invalid values', fibrous ->
         testObj = new TestObject(day: '20130401')
-        expect(-> testObj.sync.save()).to.throw('Cast to day failed for value "20130401" at path "day"')
+        expect(-> testObj.sync.save()).to.throw Error.ValidationError
 
   describe 'TimeOfDay', ->
     describe 'cast', ->
@@ -154,12 +144,12 @@ describe 'mongoose_types', ->
 
       it 'throws for malformed values', fibrous ->
         testObj = new TestObject(timeOfDay: '13')
-        expect(-> testObj.sync.save()).to.throw('Cast to timeOfDay failed for value "13" at path "timeOfDay"')
+        expect(-> testObj.sync.save()).to.throw Error.ValidationError
 
       it 'throws for invalid hours', fibrous ->
         testObj = new TestObject(timeOfDay: '24:00')
-        expect(-> testObj.sync.save()).to.throw('Cast to timeOfDay failed for value "24:00" at path "timeOfDay"')
+        expect(-> testObj.sync.save()).to.throw Error.ValidationError
 
       it 'throws for invalid minutes', fibrous ->
         testObj = new TestObject(timeOfDay: '13:60')
-        expect(-> testObj.sync.save()).to.throw('Cast to timeOfDay failed for value "13:60" at path "timeOfDay"')
+        expect(-> testObj.sync.save()).to.throw Error.ValidationError

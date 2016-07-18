@@ -26,68 +26,6 @@ schema = new mongoose.Schema
 , strict: true
 ParentModel = mongoose.model('ParentTestModel', schema)
 
-describe 'mongoose query pagination', ->
-
-  beforeEach ->
-    Model.sync.remove()
-    Model.sync.create field: 'one'
-    Model.sync.create field: 'two'
-    Model.sync.create field: 'three'
-
-  describe '#paginate', ->
-
-    it 'returns the result augmented with pagination properties', ->
-      models = Model.find().sync.paginate 1, 2
-      expect(models.length).to.eql 2
-      expect(models[0] instanceof Model).to.be.true
-      expect(models[1] instanceof Model).to.be.true
-      expect(models.page).to.eql 1
-      expect(models.pageSize).to.eql 2
-      expect(models.recordCount).to.eql 3
-      expect(models.pageCount).to.eql 2
-
-    it 'respects the query', ->
-      models = Model.find().where('field', 'one').sync.paginate 1, 10
-      expect(models.length).to.eql 1
-      expect(models.recordCount).to.eql 1
-      expect(models[0].field).to.eql 'one'
-
-    it 'respects sort', ->
-      models = Model.find().sort('-field').sync.paginate 1, 10
-      expect(models.length).to.eql 3
-      expect(models.recordCount).to.eql 3
-      expect(models[0].field).to.eql 'two'
-      expect(models[1].field).to.eql 'three'
-      expect(models[2].field).to.eql 'one'
-
-describe 'DocumentArray', ->
-  parent = null
-  models = null
-
-  beforeEach ->
-    parent = ParentModel.sync.create models: [
-      Model.sync.create field: 'one'
-      Model.sync.create field: 'two'
-      Model.sync.create field: 'three'
-    ]
-    models = parent.models.slice()
-
-  describe '#sequence', ->
-    it 'updates array order', ->
-      models.reverse()
-
-      parent.models.sequence(_(models).pluck('id'))
-      parent.sync.save()
-
-      parent = ParentModel.sync.findById parent
-      expect(_(parent.models).pluck('id')).to.eql _(models).pluck('id')
-
-    it 'does not drop missing models', ->
-      parent.models.sequence([models[2].id])
-      parent.sync.save()
-      parent = ParentModel.sync.findById parent
-      expect(_(parent.models).pluck('id')).to.eql [models[2].id, models[0].id, models[1].id]
-
 describe 'mergeAndClearNulls', ->
   model = null
 
