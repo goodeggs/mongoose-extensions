@@ -159,11 +159,6 @@
       "from": "mongodb-core@1.3.18",
       "resolved": "https://npm.goodeggs.com/mongodb-core/-/mongodb-core-1.3.18.tgz"
     },
-    "mongoose-querystream-worker": {
-      "version": "3.0.0",
-      "from": "mongoose-querystream-worker@>=3.0.0 <4.0.0",
-      "resolved": "https://npm.goodeggs.com/mongoose-querystream-worker/-/mongoose-querystream-worker-3.0.0.tgz"
-    },
     "mpath": {
       "version": "0.2.1",
       "from": "mpath@0.2.1",

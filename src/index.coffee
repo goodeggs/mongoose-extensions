@@ -3,7 +3,6 @@ _ = require 'underscore'
 module.exports = (mongoose) ->
 
   {paths, path} = require('./paths')()
-  require 'mongoose-querystream-worker'
   Q = require 'q'
 
   # Adds additional mongoose schema types
