@@ -15,6 +15,8 @@ module.exports = (mongoose) ->
       if value instanceof Number or (typeof(value) is 'number') or (value?.toString() is Number(value))
         return Math.round(100 * value) / 100
 
+    @schemaName: 'Money'
+
   class Cents extends Types.Number
     cast: (value, doc, init) ->
       value = value.toNumber() if value.toNumber? # eg bignumber.js, goodeggs-money instances
@@ -26,11 +28,13 @@ module.exports = (mongoose) ->
       return null if value is ''
 
       if value instanceof Number or (typeof(value) is 'number')
-        throw new CastError('cents', value, @path) if value % 1 != 0 # not an int
+        throw new CastError('cents', value, @path) if value % 1 isnt 0 # not an int
         throw new CastError('cents', value, @path) if value < 0
         return value
 
       throw new CastError('cents', value, @path)
+
+    @schemaName: 'Cents'
 
   class Day extends Types.String
     cast: (value, doc, init) ->
@@ -39,6 +43,8 @@ module.exports = (mongoose) ->
 
       throw new CastError('day', value, @path) if !/\d{4}\-\d{2}-\d{2}/.test value
       super(value, doc, init)
+
+    @schemaName: 'Day'
 
   class TimeOfDay extends Types.String
     cast: (value, doc, init) ->
@@ -51,5 +57,7 @@ module.exports = (mongoose) ->
       throw new CastError('timeOfDay', value, @path) unless 0 <= Number(minutes) <= 59
 
       super(value, doc, init)
+
+    @schemaName: 'TimeOfDay'
 
   _(Types).extend({Money, Cents, Day, TimeOfDay})

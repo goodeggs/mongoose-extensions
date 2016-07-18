@@ -27,16 +27,17 @@
   "devDependencies": {
     "chai": "^1.10.0",
     "coffee-script": ">=1.8.x",
-    "fibrous": "^0.3.3",
+    "fibrous": "^0.4.0",
     "goodeggs-money": "^1.0.1",
-    "mocha-fibrous": "0.0.1",
-    "mongoose": "~3.6.17",
+    "mocha": "^2.5.3",
+    "mocha-fibers": "^1.1.1",
+    "mongoose": "^4.5.5",
     "sinon": "^1.12.2"
   },
   "scripts": {
     "compile": "coffee --bare --compile --output lib/ src/",
     "prepublish": "npm run compile",
     "pretest": "npm run compile",
-    "test": "mocha"
+    "test": "mocha --ui mocha-fibers"
   }
 }

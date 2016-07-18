@@ -45,31 +45,6 @@ module.exports = (mongoose) ->
       cb(null) if cb?
     return result
 
-  mongoose.Query::paginate = (page = 1, pageSize = 10, cb) ->
-    complete = ([recordCount, records]) ->
-      records.page = page
-      records.pageSize = pageSize
-      records.pageCount = Math.ceil(recordCount / pageSize)
-      records.recordCount = recordCount
-      cb(null, records)
-
-    error = (err) ->
-      cb(err)
-
-    skip = (page - 1) * pageSize
-    [recordCount, records] = Q.all([
-      _.clone(@).exec('count')
-      @skip(skip).limit(pageSize).exec()
-    ]).then complete, error
-
-  mongoose.Types.DocumentArray::sequence = (ids) ->
-    ids = (id.toString() for id in ids)
-    sortKey = (model) ->
-      index = ids.indexOf(model.id.toString())
-      if index is -1 then ids.length else index
-
-    @sort (m1, m2) -> sortKey(m1) - sortKey(m2)
-
   mongoose.Document::paths = ->
     paths @toJSON()
 
