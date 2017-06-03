@@ -20,6 +20,16 @@ module.exports = (mongoose) ->
       else
         cb(err, true)
 
+  mongoose.Model::getValidationErrors = (cb) ->
+    try
+      @sync.validate()
+      cb(null, false)
+    catch ValidationError
+      messages = {}
+      for key, {type} of @errors
+        messages[key] = type
+      cb(null, messages)
+
   # records the previous document in @previousDoc
   recordPreviousDoc = ->
     try

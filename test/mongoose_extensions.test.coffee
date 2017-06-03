@@ -194,3 +194,31 @@ describe '#validateAndSave', ->
 
     it 'throws through', ->
       expect(-> model.sync.validateAndSave()).to.throw Error
+
+describe '#getValidationErrors', ->
+
+  describe 'a model with a required field', ->
+    model = null
+
+    before ->
+      schema = new mongoose.Schema
+        field: {type: String, required: true}
+      , strict: true
+      Model = mongoose.model('RequiredFieldTestModel', schema)
+
+    describe 'required field is present', ->
+      beforeEach ->
+        Model.sync.remove()
+        model = new Model field: 'foo'
+
+      it 'returns false', ->
+        expect(model.sync.getValidationErrors()).to.be.false
+
+    describe 'required field is missing', ->
+      beforeEach ->
+        Model.sync.remove()
+        model = new Model()
+
+      it 'returns an error hash', ->
+        expect(model.sync.getValidationErrors()).to.deep.equal {field: 'required'}
+
