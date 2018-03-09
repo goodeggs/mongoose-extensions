@@ -13,7 +13,7 @@
   ],
   "main": "lib/index.js",
   "repository": {
-    "type": "git",
+    "kind": "git",
     "url": "git://github.com/goodeggs/mongoose-extensions.git"
   },
   "homepage": "https://github.com/goodeggs/mongoose-extensions",
@@ -26,11 +26,11 @@
   "devDependencies": {
     "chai": "^1.10.0",
     "coffee-script": ">=1.8.x",
-    "fibrous": "^0.4.0",
+    "fibrous": "^0.5.0",
     "goodeggs-money": "^1.0.1",
     "mocha": "^2.5.3",
     "mocha-fibers": "^1.1.1",
-    "mongoose": "^4.5.5",
+    "mongoose": "^4.9.6",
     "sinon": "^1.12.2"
   },
   "scripts": {
