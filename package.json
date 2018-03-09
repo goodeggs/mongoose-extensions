@@ -13,7 +13,7 @@
   ],
   "main": "lib/index.js",
   "repository": {
-    "type": "git",
+    "kind": "git",
     "url": "git://github.com/goodeggs/mongoose-extensions.git"
   },
   "homepage": "https://github.com/goodeggs/mongoose-extensions",

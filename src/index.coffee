@@ -26,8 +26,8 @@ module.exports = (mongoose) ->
       cb(null, false)
     catch ValidationError
       messages = {}
-      for key, {type} of @errors
-        messages[key] = type
+      for key, {kind} of @errors
+        messages[key] = kind
       cb(null, messages)
 
   # records the previous document in @previousDoc
