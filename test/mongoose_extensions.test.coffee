@@ -137,6 +137,12 @@ describe '#validateAndSave', ->
       model.sync.validateAndSave()
       expect(Model.sync.count()).to.eql 1
 
+    it 'returns a promise', (done) ->
+      model.validateAndSave().then ((result) ->
+        expect(result).to.be.true
+        done()
+      ), done
+
   describe 'with an invalid model', ->
 
     beforeEach ->
@@ -149,6 +155,12 @@ describe '#validateAndSave', ->
     it 'does not save the model', ->
       model.sync.validateAndSave()
       expect(Model.sync.count()).to.eql 0
+
+    it 'returns a promise', (done) ->
+      model.validateAndSave().then ((result) ->
+        expect(result).to.be.false
+        done()
+      ), done
 
   describe 'when a model raises a ValidationError directly', ->
 
@@ -195,6 +207,13 @@ describe '#validateAndSave', ->
     it 'throws through', ->
       expect(-> model.sync.validateAndSave()).to.throw Error
 
+    it 'throws through the promise', (done) ->
+      model.validateAndSave().then (->
+        done(new Error('success callback should not have been called'))
+      ), (err) ->
+        expect(err.message).to.equal 'Beep boop'
+        done()
+
 describe '#getValidationErrors', ->
 
   describe 'a model with a required field', ->
@@ -214,6 +233,12 @@ describe '#getValidationErrors', ->
       it 'returns false', ->
         expect(model.sync.getValidationErrors()).to.be.false
 
+      it 'returns false via a promise', (done) ->
+        model.getValidationErrors().then ((result) ->
+          expect(result).to.be.false
+          done()
+        ), done
+
     describe 'required field is missing', ->
       beforeEach ->
         Model.sync.remove()
@@ -222,3 +247,8 @@ describe '#getValidationErrors', ->
       it 'returns an error hash', ->
         expect(model.sync.getValidationErrors()).to.deep.equal {field: 'required'}
 
+      it 'returns an error hash via a promise', (done) ->
+        model.getValidationErrors().then ((result) ->
+          expect(result).to.deep.equal {field: 'required'}
+          done()
+        ), done

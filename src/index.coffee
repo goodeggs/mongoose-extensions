@@ -10,25 +10,35 @@ module.exports = (mongoose) ->
   inflections = require './inflections'
 
   mongoose.Model::validateAndSave = (cb) ->
-    @save (err, result) =>
-      if err?.name is 'ValidationError'
-        @_id = null if @isNew
-        @errors ?= err.errors or {}
-        cb(null, false)
-      else if err?
-        cb(err, false)
-      else
-        cb(err, true)
+    promise = @save()
+      .then (-> true), (err) =>
+        if err?.name is 'ValidationError'
+          @_id = null if @isNew
+          @errors ?= err.errors or {}
+          false
+        else
+          throw err
+
+    if (cb)
+      promise.then ((val) -> cb(null, val)), cb
+
+    promise
 
   mongoose.Model::getValidationErrors = (cb) ->
-    try
-      @sync.validate()
-      cb(null, false)
-    catch ValidationError
-      messages = {}
-      for key, {kind} of @errors
-        messages[key] = kind
-      cb(null, messages)
+    promise = @validate()
+      .then (-> false), (err) =>
+        if err?.name is 'ValidationError'
+          messages = {}
+          for key, {kind} of @errors
+            messages[key] = kind
+          messages
+        else
+          throw err
+
+    if (cb)
+      promise.then ((val) -> cb(null, val)), cb
+
+    promise
 
   # records the previous document in @previousDoc
   recordPreviousDoc = ->
