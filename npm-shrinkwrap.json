@@ -1,6 +1,6 @@
 {
   "name": "mongoose-extensions",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "dependencies": {
     "assertion-error": {
       "version": "1.0.0",
